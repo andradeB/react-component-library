@@ -5,7 +5,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { blue as ReactTheme } from '@pxblue/react-themes';
 import * as Colors from '@pxblue/colors';
 import 'typeface-open-sans';
-import { pxblueTheme } from '@pxblue/storybook-themes';
+import { pxblueTheme, pxblueDarkTheme } from '@pxblue/storybook-themes';
 
 const newViewports = {
     iPhone5: {
@@ -31,9 +31,14 @@ const newViewports = {
     },
 };
 
-pxblueTheme.brandTitle = 'PX Blue React Component Library';
-pxblueTheme.brandImage = require('../assets/pxblue-react.svg');
-pxblueTheme.brandUrl = 'https://pxblue.github.io';
+const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const color = isDarkMode ? Colors.white[500] : Colors.gray[800];
+const backgroundColor = isDarkMode ? 'unset' : '#efefef';
+const theme = isDarkMode ? pxblueDarkTheme : pxblueTheme;
+
+theme.brandTitle = 'PX Blue React Component Library';
+theme.brandImage = require('../assets/pxblue-react.svg');
+theme.brandUrl = 'https://pxblue.github.io';
 
 addParameters({
     name: 'PXBlue',
@@ -45,7 +50,7 @@ addParameters({
         viewports: newViewports,
     },
     options: {
-        theme: pxblueTheme,
+        theme,
         showRoots: true,
     },
 });
@@ -54,7 +59,7 @@ export const appliedTheme = createMuiTheme(ReactTheme);
 
 addDecorator((storyFn) => (
     <MuiThemeProvider theme={appliedTheme}>
-        <div className={'wrapper'} style={{ color: Colors.gray['800'] }}>
+        <div className={'wrapper'} style={{ color, backgroundColor }}>
             {storyFn()}
         </div>
     </MuiThemeProvider>
