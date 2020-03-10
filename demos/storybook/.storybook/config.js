@@ -2,7 +2,7 @@ import React from 'react';
 import { addDecorator, addParameters } from '@storybook/react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { blue as ReactTheme } from '@pxblue/react-themes';
+import { blue as ReactTheme, blueDark as ReactDarkTheme } from '@pxblue/react-themes';
 import * as Colors from '@pxblue/colors';
 import 'typeface-open-sans';
 import { pxblueTheme, pxblueDarkTheme } from '@pxblue/storybook-themes';
@@ -33,12 +33,13 @@ const newViewports = {
 
 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const color = isDarkMode ? Colors.white[500] : Colors.gray[800];
-const backgroundColor = isDarkMode ? 'unset' : '#efefef';
-const theme = isDarkMode ? pxblueDarkTheme : pxblueTheme;
+const backgroundColor = isDarkMode ? Colors.black[900] : '#efefef';
+const storybookTheme = isDarkMode ? pxblueDarkTheme : pxblueTheme;
+export const appliedTheme = isDarkMode ? createMuiTheme(ReactDarkTheme) : createMuiTheme(ReactTheme);
 
-theme.brandTitle = 'PX Blue React Component Library';
-theme.brandImage = require('../assets/pxblue-react.svg');
-theme.brandUrl = 'https://pxblue.github.io';
+storybookTheme.brandTitle = 'PX Blue React Component Library';
+storybookTheme.brandImage = require('../assets/pxblue-react.svg');
+storybookTheme.brandUrl = 'https://pxblue.github.io';
 
 addParameters({
     name: 'PXBlue',
@@ -50,12 +51,10 @@ addParameters({
         viewports: newViewports,
     },
     options: {
-        theme,
+        theme: storybookTheme,
         showRoots: true,
     },
 });
-
-export const appliedTheme = createMuiTheme(ReactTheme);
 
 addDecorator((storyFn) => (
     <MuiThemeProvider theme={appliedTheme}>
